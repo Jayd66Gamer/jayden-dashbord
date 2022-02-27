@@ -173,6 +173,36 @@
 			}
 		]
 	};
+let curDay
+let curIndex
+let curName
+let curPeriod
+let curStyle
+function showCurData (day,index,name,period,style){
+	curDay = day
+	curIndex = index
+	curName = name
+	curPeriod = period
+	curStyle = style
+
+}
+	function addTimeSlot(day) {
+		if (day==='Monday'){
+			timetable.Monday=[...timetable.Monday,{name: "??",period: 1,style: ""}]
+		}
+		else if (day==='Tuesday'){
+			timetable.Tuesday=[...timetable.Tuesday,{name: "??",period: 1,style: ""}]
+		}
+		else if (day==='Wednesday'){
+			timetable.Wednesday=[...timetable.Wednesday,{name: "??",period: 1,style: ""}]
+		}
+		else if (day==='Thursday'){
+			timetable.Thursday=[...timetable.Thursday,{name: "??",period: 1,style: ""}]
+		}
+		else if (day==='Friday'){
+			timetable.Friday=[...timetable.Friday,{name: "??",period: 1,style: ""}]
+		}
+	}
 
 	async function logout() {
 		const { error } = await supabase.auth.signOut();
@@ -183,7 +213,7 @@
 
 <div class="container">
 	<h1>My dashboard</h1>
-	<table class="table caption-top">
+	<table class="table caption-top text-center">
 		<caption>school timetable</caption>
 		<thead>
 			<tr>
@@ -204,49 +234,118 @@
 		<tbody>
 			<tr>
 				<th scope="row">Monday</th>
-				{#each timetable.Monday as timeSlot}
+				{#each timetable.Monday as timeSlot, index}
 					<td colspan={timeSlot.period} class={timeSlot.style}>
-						<button type="button" class="btn">{timeSlot.name}</button>
+						<button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#editTimeSlot" on:click={() =>showCurData('Monday', index, timeSlot.name, timeSlot.period, timeSlot.style)}
+							>{timeSlot.name}</button>
 					</td>
 				{/each}
+				<td>
+					<button class="btn" 
+					on:click={() => addTimeSlot("Monday")}
+					>+</button>
+				</td>
 			</tr>
 			<tr>
 				<th scope="row">Tuesday</th>
-				{#each timetable.Tuesday as timeSlot}
+				{#each timetable.Tuesday as timeSlot, index}
 					<td colspan={timeSlot.period} class={timeSlot.style}>
-						<button type="button" class="btn">{timeSlot.name}</button>
+						<button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#editTimeSlot" on:click={() =>showCurData('Tuesday', index, timeSlot.name, timeSlot.period, timeSlot.style)}
+							>{timeSlot.name}</button>
 					</td>
 				{/each}
+				<td>
+					<button class="btn" 
+					on:click={() => addTimeSlot("Tuesday")}
+					>+</button>
+				</td>
 			</tr>
 			<tr>
 				<th scope="row">Wednesday</th>
-				{#each timetable.Wednesday as timeSlot}
+				{#each timetable.Wednesday as timeSlot, index}
 					<td colspan={timeSlot.period} class={timeSlot.style}>
-						<button type="button" class="btn">{timeSlot.name}</button>
+						<button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#editTimeSlot" on:click={() =>showCurData('Wednesday', index, timeSlot.name, timeSlot.period, timeSlot.style)}
+							>{timeSlot.name}</button>
 					</td>
 				{/each}
+				<td>
+					<button class="btn" 
+					on:click={() => addTimeSlot("Wednesday")}
+					>+</button>
+				</td>
 			</tr>
 			<tr>
 				<th scope="row">Thursday</th>
-				{#each timetable.Thrusday as timeSlot}
+				{#each timetable.Thursday as timeSlot, index}
 					<td colspan={timeSlot.period} class={timeSlot.style}>
-						<button type="button" class="btn">{timeSlot.name}</button>
+						<button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#editTimeSlot" on:click={() =>showCurData('Thursday', index, timeSlot.name, timeSlot.period, timeSlot.style)}
+							>{timeSlot.name}</button>
 					</td>
 				{/each}
+				<td>
+					<button class="btn" 
+					on:click={() => addTimeSlot("Thursday")}
+					>+</button>
+				</td>
 			</tr>
 			<tr>
 				<th scope="row">Friday</th>
-				{#each timetable.Friday as timeSlot}
+				{#each timetable.Friday as timeSlot, index}
 					<td colspan={timeSlot.period} class={timeSlot.style}>
-						<button type="button" class="btn">{timeSlot.name}</button>
+						<button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#editTimeSlot" on:click={() =>showCurData('Friday', index, timeSlot.name, timeSlot.period, timeSlot.style)}
+							>{timeSlot.name}</button>
 					</td>
 				{/each}
+				<td>
+					<button class="btn" 
+					on:click={() => addTimeSlot("Friday")}
+					>+</button>
+				</td>
 			</tr>
 		</tbody>
 	</table>
 </div>
+<!--Edit time slot-->
 
-
+  
+  <!-- Modal -->
+  <div class="modal fade" id="editTimeSlot" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+	  <div class="modal-content">
+		<div class="modal-header">
+		  <h5 class="modal-title" id="exampleModalLabel">Edit time slot</h5>
+		  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		</div>
+		<div class="modal-body">
+			<div class="input-group mb-3">
+				<span class="input-group-text" id="basic-addon1">Name</span>
+				<input type="text" class="form-control" bind:value={curName}>
+			  </div>
+			  <div class="input-group mb-3">
+				<span class="input-group-text" id="basic-addon1">Period</span>
+				<input type="number" class="form-control" bind:value={curPeriod}>
+			  </div>
+			  <div class="input-group mb-3">
+				<label class="input-group-text" for="inputGroupSelect01">Style</label>
+				<select class="form-select" id="inputGroupSelect01" bind:value={curStyle}>
+				  <option value="">Default</option>
+				  <option value="table-primary">Blue</option>
+				  <option value="table-success">Green</option>
+				  <option value="table-danger">Red</option>
+				  <option value="table-warning">Yellow</option>
+				  <option value="table-secondary">Grey</option>
+				</select>
+			  </div>
+		</div>
+		<div class="modal-footer">
+		  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+		  <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Delete</button>
+		  <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Save changes</button>
+		  
+		</div>
+	  </div>
+	</div>
+  </div>
 <!-- Sign Out -->
 <section class="container px-4 py-3 text-center">
 	<button class="btn btn-secondary" on:click={logout}>Logout</button>
