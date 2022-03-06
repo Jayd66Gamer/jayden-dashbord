@@ -203,12 +203,77 @@ function showCurData (day,index,name,period,style){
 			timetable.Friday=[...timetable.Friday,{name: "??",period: 1,style: ""}]
 		}
 	}
+	function setTimeSlot(day,index,newName,newPeriod,newStyle) {
+		if (day === 'Monday') {
+			timetable.Monday[index].name = newName;
+			timetable.Monday[index].period = newPeriod;
+			timetable.Monday[index].style = newStyle;
+		} else if (day === 'Tuesday') {
+			timetable.Tuesday[index].name = newName;
+			timetable.Tuesday[index].period = newPeriod;
+			timetable.Tuesday[index].style = newStyle;
+		} else if (day === 'Wednesday') {
+			timetable.Wednesday[index].name = newName;
+			timetable.Wednesday[index].period = newPeriod;
+			timetable.Wednesday[index].style = newStyle;
+		} else if (day === 'Thursday') {
+			timetable.Thursday[index].name = newName;
+			timetable.Thursday[index].period = newPeriod;
+			timetable.Thursday[index].style = newStyle;
+		} else if (day === 'Friday') {
+			timetable.Friday[index].name = newName;
+			timetable.Friday[index].period = newPeriod;
+			timetable.Friday[index].style = newStyle;
+		}
+saveEntry()
 
+	}
+	function deleteTimeSlot(day,index) {
+		if (day === 'Monday') {
+			timetable.Monday.splice(index, 1);
+			timetable = timetable;
+		} else if (day === 'Tuesday') {
+			timetable.Tuesday.splice(index, 1);
+			timetable = timetable;
+		} else if (day === 'Wednesday') {
+			timetable.Wednesday.splice(index, 1);
+			timetable = timetable;
+		} else if (day === 'Thursday') {
+			timetable.Thursday.splice(index, 1);
+			timetable = timetable;
+		} else if (day === 'Friday') {
+			timetable.Friday.splice(index, 1);
+			timetable = timetable;
+		}
+saveEntry()
+	}
 	async function logout() {
 		const { error } = await supabase.auth.signOut();
 
 		if (error) alert(error.message); // alert if error
 	}
+	// Upsert entry
+async function saveEntry() {
+  const { error } = await supabase.from("studentEntries").upsert(
+    {
+      user_id: supabase.auth.user().id,
+      timetable: timetable,
+    },
+    { onConflict: "user_id" }
+  );
+  if (error) alert(error.message);
+}
+// Get entries
+async function getEntries() {
+  const { data, error } = await supabase.from("studentEntries").select();
+  if (error) alert(error.message);
+
+  if (data != "") {
+    timetable = data[0].timetable;
+  }
+}
+
+getEntries();
 </script>
 
 <div class="container">
@@ -339,8 +404,8 @@ function showCurData (day,index,name,period,style){
 		</div>
 		<div class="modal-footer">
 		  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-		  <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Delete</button>
-		  <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Save changes</button>
+		  <button type="button" class="btn btn-danger" data-bs-dismiss="modal" on:click={() => deleteTimeSlot(curDay,curIndex)}>Delete</button>
+		  <button type="button" class="btn btn-primary" data-bs-dismiss="modal" on:click={() => setTimeSlot(curDay, curIndex, curName, curPeriod, curStyle)}>Save changes</button>
 		  
 		</div>
 	  </div>
